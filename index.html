@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brass Rabbit Pub — Arlington's Finest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brass: #c9963f;
+      --brass-light: #e8b86d;
+      --brass-dim: #8a6320;
+      --black: #080808;
+      --deep: #0e0c09;
+      --charcoal: #1a1710;
+      --mid: #2a2620;
+      --text: #d4cfc4;
+      --text-dim: #7a7060;
+      --white: #f5f0e8;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      width: 8px; height: 8px;
+      background: var(--brass);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transition: transform 0.15s ease;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      width: 32px; height: 32px;
+      border: 1px solid var(--brass);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+      opacity: 0.6;
+    }
+
+    /* GRAIN OVERLAY */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 1.5rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.4s ease, padding 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(8,8,8,0.95);
+      padding: 1rem 4rem;
+      border-bottom: 1px solid rgba(201,150,63,0.15);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      color: var(--brass);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex; gap: 2.5rem; list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--brass); }
+    .nav-cta {
+      background: transparent;
+      border: 1px solid var(--brass);
+      color: var(--brass);
+      padding: 0.55rem 1.5rem;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .nav-cta:hover { background: var(--brass); color: var(--black); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--black);
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,150,63,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,150,63,0.04) 0%, transparent 60%),
+        linear-gradient(180deg, #080808 0%, #100d08 50%, #080808 100%);
+    }
+    /* Art deco lines */
+    .hero-deco {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    .hero-deco::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(600px, 90vw); height: min(600px, 90vw);
+      border: 1px solid rgba(201,150,63,0.06);
+      border-radius: 50%;
+    }
+    .hero-deco::after {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(500px, 80vw); height: min(500px, 80vw);
+      border: 1px solid rgba(201,150,63,0.04);
+      border-radius: 50%;
+    }
+    .hero-inner {
+      position: relative; z-index: 2;
+      text-align: center;
+      padding: 2rem;
+    }
+    .hero-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.3s forwards;
+    }
+    .hero-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-weight: 300;
+      line-height: 0.9;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-logo-text em {
+      font-style: italic;
+      color: var(--brass-light);
+    }
+    .hero-rule {
+      display: flex; align-items: center; gap: 1rem;
+      justify-content: center; margin: 2rem 0;
+      opacity: 0;
+      animation: fadeUp 1s 0.7s forwards;
+    }
+    .hero-rule span {
+      display: block; height: 1px; width: 80px;
+      background: linear-gradient(90deg, transparent, var(--brass));
+    }
+    .hero-rule span:last-child {
+      background: linear-gradient(90deg, var(--brass), transparent);
+    }
+    .hero-rule-icon {
+      font-size: 0.6rem; letter-spacing: 0.3em; color: var(--brass);
+      text-transform: uppercase;
+    }
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 1.2rem; justify-content: center;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1s 1.1s forwards;
+    }
+    .btn-primary {
+      background: var(--brass);
+      color: var(--black);
+      padding: 0.9rem 2.5rem;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--brass-light); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(245,240,232,0.3);
+      padding: 0.9rem 2.5rem;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.3s, color 0.3s, transform 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--brass); color: var(--brass); transform: translateY(-2px); }
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      opacity: 0; animation: fadeUp 1s 1.5s forwards;
+    }
+    .scroll-hint span {
+      font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(180deg, var(--brass), transparent);
+      animation: scrollLine 2s 1.5s infinite;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollLine {
+      0% { transform: scaleY(0); transform-origin: top; opacity: 1; }
+      50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      51% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+    }
+
+    /* SECTION COMMONS */
+    section { padding: 8rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.6rem; letter-spacing: 0.5em; text-transform: uppercase;
+      color: var(--brass); margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--white);
+    }
+    .section-title em { font-style: italic; color: var(--brass-light); }
+    .divider {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin: 2.5rem 0;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--brass-dim), transparent);
+    }
+    .divider-dot {
+      width: 4px; height: 4px; background: var(--brass);
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+
+    /* ABOUT */
+    #about { background: var(--deep); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+      align-items: center;
+    }
+    .about-text p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .about-text p:first-of-type { font-size: 1.5rem; font-style: italic; }
+    .about-badges {
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+    .badge {
+      border-left: 1px solid var(--brass);
+      padding: 0.5rem 0 0.5rem 1.5rem;
+    }
+    .badge-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 300;
+      color: var(--brass); line-height: 1;
+    }
+    .badge-label {
+      font-size: 0.65rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--text-dim);
+      margin-top: 0.3rem;
+    }
+
+    /* HOURS */
+    #hours {
+      background: var(--charcoal);
+      border-top: 1px solid rgba(201,150,63,0.1);
+      border-bottom: 1px solid rgba(201,150,63,0.1);
+    }
+    .hours-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      border: 1px solid rgba(201,150,63,0.15);
+      margin-top: 3rem;
+    }
+    .hours-card {
+      padding: 2.5rem 2rem;
+      border-right: 1px solid rgba(201,150,63,0.1);
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .hours-card:last-child { border-right: none; }
+    .hours-card:hover { background: rgba(201,150,63,0.04); }
+    .hours-day {
+      font-size: 0.6rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--brass);
+      margin-bottom: 1rem;
+    }
+    .hours-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300;
+      color: var(--white); line-height: 1.3;
+    }
+    .hours-note {
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+      margin-top: 0.8rem;
+    }
+
+    /* HAPPY HOUR */
+    #happyhour {
+      background: var(--deep);
+      position: relative; overflow: hidden;
+    }
+    #happyhour::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 50%; height: 100%;
+      background: radial-gradient(ellipse at right, rgba(201,150,63,0.05), transparent 70%);
+    }
+    .hh-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+      align-items: start;
+    }
+    .hh-left .section-title { margin-bottom: 0; }
+    .hh-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.15rem;
+      color: var(--text-dim); margin: 1.5rem 0 2.5rem;
+      line-height: 1.7;
+    }
+    .hh-time-badge {
+      display: inline-block;
+      border: 1px solid var(--brass);
+      padding: 1rem 2rem;
+      font-size: 0.65rem; letter-spacing: 0.35em;
+      text-transform: uppercase; color: var(--brass);
+    }
+    .hh-items {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: rgba(201,150,63,0.1);
+      border: 1px solid rgba(201,150,63,0.1);
+    }
+    .hh-item {
+      background: var(--deep);
+      padding: 1.8rem 1.5rem;
+      transition: background 0.3s;
+    }
+    .hh-item:hover { background: rgba(201,150,63,0.05); }
+    .hh-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300;
+      color: var(--brass-light); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .hh-desc {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+    }
+
+    /* MENUS */
+    #menus { background: var(--black); }
+    .menus-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: rgba(201,150,63,0.08);
+      border: 1px solid rgba(201,150,63,0.08);
+      margin-top: 3.5rem;
+    }
+    .menu-card {
+      background: var(--black);
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      display: flex; flex-direction: column;
+      transition: background 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .menu-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--brass);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .menu-card:hover { background: rgba(201,150,63,0.03); }
+    .menu-card:hover::after { transform: scaleX(1); }
+    .menu-card-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.8rem; color: var(--brass-dim);
+      margin-bottom: 1.5rem;
+    }
+    .menu-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300;
+      color: var(--white); line-height: 1.2;
+      flex: 1;
+    }
+    .menu-card-arrow {
+      margin-top: 2rem;
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--brass);
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .menu-card-arrow::after {
+      content: '→';
+      font-size: 0.8rem;
+      transition: transform 0.3s;
+    }
+    .menu-card:hover .menu-card-arrow::after { transform: translateX(4px); }
+
+    /* FOOD HIGHLIGHTS */
+    #food { background: var(--charcoal); }
+    .food-intro {
+      max-width: 580px; margin-bottom: 4rem;
+    }
+    .food-intro p {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.2rem;
+      color: var(--text-dim); line-height: 1.8; margin-top: 1rem;
+    }
+    .food-tabs {
+      display: flex; gap: 0; margin-bottom: 0;
+      border-bottom: 1px solid rgba(201,150,63,0.1);
+    }
+    .food-tab {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; cursor: pointer;
+      color: var(--text-dim);
+      border-bottom: 2px solid transparent;
+      transition: color 0.3s;
+      margin-bottom: -1px;
+      background: none; border-left: none; border-right: none; border-top: none;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .food-tab.active {
+      color: var(--brass);
+      border-bottom: 2px solid var(--brass);
+    }
+    .food-panel { display: none; padding-top: 2.5rem; }
+    .food-panel.active { display: block; }
+    .food-items {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+      background: rgba(201,150,63,0.06);
+      border: 1px solid rgba(201,150,63,0.06);
+    }
+    .food-item {
+      background: var(--charcoal);
+      padding: 2rem 1.5rem;
+      transition: background 0.3s;
+    }
+    .food-item:hover { background: rgba(201,150,63,0.05); }
+    .food-item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 300;
+      color: var(--white); margin-bottom: 0.5rem;
+    }
+    .food-item-desc {
+      font-size: 0.65rem; line-height: 1.7;
+      color: var(--text-dim); margin-bottom: 1rem;
+    }
+    .food-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; color: var(--brass);
+    }
+
+    /* EVENTS */
+    #events { background: var(--deep); }
+    .events-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: rgba(201,150,63,0.08);
+      margin-top: 3.5rem;
+    }
+    .event-card {
+      background: var(--deep);
+      padding: 3rem 2.5rem;
+      transition: background 0.3s;
+    }
+    .event-card:hover { background: rgba(201,150,63,0.04); }
+    .event-day {
+      font-size: 0.55rem; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--brass);
+      margin-bottom: 1rem;
+    }
+    .event-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300;
+      color: var(--white); margin-bottom: 1rem;
+    }
+    .event-desc {
+      font-size: 0.75rem; line-height: 1.8;
+      color: var(--text-dim); margin-bottom: 2rem;
+    }
+    .event-link {
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--brass);
+      text-decoration: none;
+      transition: letter-spacing 0.3s;
+    }
+    .event-link:hover { letter-spacing: 0.5em; }
+
+    /* WINGS */
+    #wings {
+      background: var(--black);
+      position: relative;
+    }
+    .wings-inner {
+      display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem;
+      align-items: start;
+    }
+    .wings-options {
+      margin-top: 2.5rem;
+    }
+    .wings-category {
+      margin-bottom: 2rem;
+    }
+    .wings-cat-label {
+      font-size: 0.55rem; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--brass-dim);
+      margin-bottom: 0.8rem;
+    }
+    .wings-tags {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .tag {
+      border: 1px solid rgba(201,150,63,0.2);
+      padding: 0.4rem 0.9rem;
+      font-size: 0.6rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--text-dim);
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .tag:hover { border-color: var(--brass); color: var(--brass); }
+    .wings-right .section-title { margin-bottom: 1.5rem; }
+    .wings-sizes {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: rgba(201,150,63,0.08);
+      border: 1px solid rgba(201,150,63,0.08);
+      margin-top: 2rem;
+    }
+    .wings-size {
+      background: var(--black);
+      padding: 2rem;
+      transition: background 0.3s;
+    }
+    .wings-size:hover { background: rgba(201,150,63,0.04); }
+    .ws-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; color: var(--white); margin-bottom: 0.3rem;
+    }
+    .ws-detail { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.1em; }
+    .ws-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; color: var(--brass); margin-top: 1rem;
+    }
+
+    /* PRIVATE EVENTS */
+    #private {
+      background: var(--charcoal);
+      text-align: center;
+    }
+    .private-inner { max-width: 700px; margin: 0 auto; }
+    .private-inner .section-title { font-size: clamp(2.5rem, 5vw, 4.5rem); }
+    .private-inner p {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.2rem;
+      color: var(--text-dim); line-height: 1.8;
+      margin: 2rem 0 3rem;
+    }
+
+    /* CONTACT / FOOTER */
+    #contact {
+      background: var(--deep);
+      border-top: 1px solid rgba(201,150,63,0.1);
+    }
+    .contact-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 4rem; padding-bottom: 4rem;
+      border-bottom: 1px solid rgba(201,150,63,0.08);
+    }
+    .contact-brand .brand-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300;
+      color: var(--white); line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    .contact-brand .brand-sub {
+      font-size: 0.6rem; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--brass);
+      margin-bottom: 1.5rem;
+    }
+    .contact-brand p {
+      font-size: 0.75rem; line-height: 1.9;
+      color: var(--text-dim); max-width: 280px;
+    }
+    .contact-col-label {
+      font-size: 0.55rem; letter-spacing: 0.45em;
+      text-transform: uppercase; color: var(--brass-dim);
+      margin-bottom: 1.5rem;
+    }
+    .contact-col a, .contact-col p {
+      display: block;
+      font-size: 0.75rem; line-height: 2;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .contact-col a:hover { color: var(--brass); }
+    .social-links {
+      display: flex; gap: 1rem; margin-top: 1.5rem;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(201,150,63,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.7rem;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .social-link:hover { border-color: var(--brass); color: var(--brass); }
+    .footer-bottom {
+      padding-top: 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p {
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      color: var(--text-dim);
+    }
+    .footer-bottom a {
+      color: var(--text-dim); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-bottom a:hover { color: var(--brass); }
+
+    /* MOBILE */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav.scrolled { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .about-grid, .hh-grid, .events-grid, .wings-inner,
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .hours-grid { grid-template-columns: 1fr 1fr; }
+      .menus-grid { grid-template-columns: 1fr 1fr; }
+      .food-items { grid-template-columns: 1fr; }
+      .wings-sizes { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 5rem 1.5rem; }
+      .hours-grid { grid-template-columns: 1fr; }
+      .menus-grid { grid-template-columns: 1fr; }
+      .hh-items { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+      body { cursor: auto; }
+      .cursor, .cursor-ring { display: none; }
+    }
+
+    /* REVEAL ANIMATION */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav id="mainNav">
+    <a href="#hero" class="nav-logo">Brass Rabbit</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#menus">Menus</a></li>
+      <li><a href="#happyhour">Happy Hour</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="https://www.opentable.com/r/brass-rabbit-reservations-arlington?restref=1478311&lang=en-US&ot_source=Restaurant%20website" target="_blank" class="nav-cta">Reserve a Table</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-deco"></div>
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Clarendon · Arlington, Virginia</p>
+      <h1 class="hero-logo-text">Brass<br><em>Rabbit</em></h1>
+      <div class="hero-rule">
+        <span></span>
+        <span class="hero-rule-icon">Pub &amp; Kitchen</span>
+        <span></span>
+      </div>
+      <p class="hero-sub">American pub fare, craft cocktails &amp; legendary weekend brunch — right off the Clarendon Metro.</p>
+      <div class="hero-ctas">
+        <a href="https://order.toasttab.com/online/brass-rabbit-public-house" target="_blank" class="btn-primary">Order Online</a>
+        <a href="https://www.opentable.com/r/brass-rabbit-reservations-arlington?restref=1478311&lang=en-US&ot_source=Restaurant%20website" target="_blank" class="btn-outline">Make a Reservation</a>
+        <a href="#menus" class="btn-outline">View Menus</a>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p class="section-label">Our Story</p>
+          <h2 class="section-title">A Neighborhood <em>Institution</em></h2>
+          <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div></div>
+          <p>Tucked into the heart of Clarendon, Brass Rabbit is more than a bar — it's the place where the neighborhood comes alive. We serve elevated American pub fare alongside a world-class whiskey selection and cocktails that make you stay for one more round.</p>
+          <p>Weekend brunch that draws a crowd. Happy hour that sets the standard. A vibe that's effortlessly yours.</p>
+          <p style="font-style:italic; font-size:1.1rem; color:var(--text-dim);">Under fresh management and better than ever. Hop on in — we're ready for you.</p>
+        </div>
+        <div class="about-badges reveal reveal-delay-2">
+          <div class="badge">
+            <div class="badge-num">$10</div>
+            <div class="badge-label">Whiskey Happy Hour</div>
+          </div>
+          <div class="badge">
+            <div class="badge-num">6+</div>
+            <div class="badge-label">Years Serving Clarendon</div>
+          </div>
+          <div class="badge">
+            <div class="badge-num">2</div>
+            <div class="badge-label">Days of Weekend Brunch</div>
+          </div>
+          <div class="badge">
+            <div class="badge-num">∞</div>
+            <div class="badge-label">Whiskeys on the List</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOURS -->
+  <section id="hours">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-label">When to Find Us</p>
+        <h2 class="section-title">Hours of <em>Operation</em></h2>
+      </div>
+      <div class="hours-grid reveal reveal-delay-1">
+        <div class="hours-card">
+          <div class="hours-day">Monday – Thursday</div>
+          <div class="hours-time">3 PM<br>—<br>12 AM</div>
+          <div class="hours-note">Wing Night Mon 6–9pm</div>
+        </div>
+        <div class="hours-card">
+          <div class="hours-day">Friday</div>
+          <div class="hours-time">3 PM<br>—<br>1 AM</div>
+          <div class="hours-note">Happy Hour 3–6pm</div>
+        </div>
+        <div class="hours-card">
+          <div class="hours-day">Saturday</div>
+          <div class="hours-time">10 AM<br>—<br>1 AM</div>
+          <div class="hours-note">Brunch from 10am</div>
+        </div>
+        <div class="hours-card">
+          <div class="hours-day">Sunday</div>
+          <div class="hours-time">10 AM<br>—<br>12 AM</div>
+          <div class="hours-note">Brunch from 10am</div>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top:2rem; font-size:0.65rem; letter-spacing:0.2em; color:var(--text-dim); text-transform:uppercase;" class="reveal reveal-delay-2">Seating is first come, first served · Large parties &amp; events by reservation</p>
+    </div>
+  </section>
+
+  <!-- HAPPY HOUR -->
+  <section id="happyhour">
+    <div class="section-inner">
+      <div class="hh-grid">
+        <div class="hh-left reveal">
+          <p class="section-label">Mon – Fri · 3pm – 6pm</p>
+          <h2 class="section-title">Arlington's Best <em>Happy Hour</em></h2>
+          <p class="hh-tagline">The clock hits three and the city exhales. Pull up a stool, pour something good, and let the evening begin.</p>
+          <div class="hh-time-badge">Happy Hour · 3PM – 6PM · Mon–Fri</div>
+          <div style="margin-top:2rem;">
+            <p style="font-size:0.65rem; letter-spacing:0.2em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.8rem;">Bonus: $1 Bottled Beers from 3–4pm</p>
+          </div>
+        </div>
+        <div class="hh-items reveal reveal-delay-2">
+          <div class="hh-item">
+            <div class="hh-price">$5</div>
+            <div class="hh-desc">Draft Beers</div>
+          </div>
+          <div class="hh-item">
+            <div class="hh-price">$6</div>
+            <div class="hh-desc">Glass of Wine</div>
+          </div>
+          <div class="hh-item">
+            <div class="hh-price">$8</div>
+            <div class="hh-desc">Espresso Martinis</div>
+          </div>
+          <div class="hh-item">
+            <div class="hh-price">$10</div>
+            <div class="hh-desc">Premium Whiskeys</div>
+          </div>
+          <div class="hh-item">
+            <div class="hh-price">$10</div>
+            <div class="hh-desc">Happy Hour Apps</div>
+          </div>
+          <div class="hh-item">
+            <div class="hh-price">$1</div>
+            <div class="hh-desc">Bottled Beers · 3–4pm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENUS -->
+  <section id="menus">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-label">Eat &amp; Drink</p>
+        <h2 class="section-title">Explore Our <em>Menus</em></h2>
+        <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; color:var(--text-dim); max-width:520px; line-height:1.7; margin-top:1rem;">From all-day pub fare to weekend brunch favorites, craft cocktails to an encyclopedic whiskey list — there's always something worth ordering.</p>
+      </div>
+      <div class="menus-grid reveal reveal-delay-1">
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_a2131adb38cf4a99b3d2f1955fbaf5c9.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">01</div>
+          <div class="menu-card-title">All Day Menu</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_797151665a984bc0ae86191ec63eb31f.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">02</div>
+          <div class="menu-card-title">Weekend Brunch</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_4520bdfe80d54ff898f324e6ab3b0463.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">03</div>
+          <div class="menu-card-title">Brunch Drinks</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_e08ae148ce7647f8861f0eb971d52fdf.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">04</div>
+          <div class="menu-card-title">Cocktails &amp; Drinks</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_aa9f25118c54422a8d908ad72c516a21.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">05</div>
+          <div class="menu-card-title">Happy Hour Specials</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_f186d1d4b08c4494b041e44824d7ca6e.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">06</div>
+          <div class="menu-card-title">Full Whiskey List</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_60f94de703b240a5864018b043b7427e.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">07</div>
+          <div class="menu-card-title">$10 Happy Hour Whiskeys</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+        <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_1f85c17acb8c44c7b9609242591f6223.pdf" target="_blank" class="menu-card">
+          <div class="menu-card-num">08</div>
+          <div class="menu-card-title">Weekly Specials</div>
+          <div class="menu-card-arrow">View Menu</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOD HIGHLIGHTS -->
+  <section id="food">
+    <div class="section-inner">
+      <div class="food-intro reveal">
+        <p class="section-label">Kitchen Favorites</p>
+        <h2 class="section-title">What We're <em>Known For</em></h2>
+        <p>Elevated pub fare built for sharing, savoring, and coming back for more.</p>
+      </div>
+      <div class="food-tabs reveal reveal-delay-1">
+        <button class="food-tab active" onclick="showTab('starters')">Starters</button>
+        <button class="food-tab" onclick="showTab('mains')">Mains</button>
+        <button class="food-tab" onclick="showTab('sandwiches')">Sandwiches</button>
+        <button class="food-tab" onclick="showTab('desserts')">Desserts</button>
+      </div>
+
+      <div id="starters" class="food-panel active">
+        <div class="food-items">
+          <div class="food-item">
+            <div class="food-item-name">Charcuterie Board</div>
+            <div class="food-item-desc">Gouda, sharp white cheddar, beef summer sausage, salami, apricot jam, honey, grapes, wheat crackers</div>
+            <div class="food-item-price">$17</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Jumbo Lump Crab Dip</div>
+            <div class="food-item-desc">Lump crab, cream cheese, Old Bay, grilled pita</div>
+            <div class="food-item-price">$16</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Wild Mushroom Crostini</div>
+            <div class="food-item-desc">Whipped feta cheese, sautéed mushrooms, balsamic drizzle, crisp crostini</div>
+            <div class="food-item-price">$14</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Steak &amp; Cheese Eggrolls</div>
+            <div class="food-item-desc">Hand rolled, beer cheese sauce</div>
+            <div class="food-item-price">$14</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Brussels Sprouts</div>
+            <div class="food-item-desc">Flash fried, crispy shallots, applewood bacon, maple-mustard vinaigrette</div>
+            <div class="food-item-price">$12</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Pretzel Bites</div>
+            <div class="food-item-desc">Truffle oil, salt, parmesan</div>
+            <div class="food-item-price">$12</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="mains" class="food-panel">
+        <div class="food-items">
+          <div class="food-item">
+            <div class="food-item-name">Blackened Salmon</div>
+            <div class="food-item-desc">Wild rice, herb lemon butter, mango relish</div>
+            <div class="food-item-price">$27</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Steak Frites</div>
+            <div class="food-item-desc">12oz NY strip steak, crispy frites, tossed greens</div>
+            <div class="food-item-price">$28</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Fish &amp; Chips</div>
+            <div class="food-item-desc">Beer battered cod, coleslaw, remoulade, fries</div>
+            <div class="food-item-price">$19</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Cavatappi &amp; Vodka Sauce</div>
+            <div class="food-item-desc">Rich vodka tomato sauce, garlic, fresh basil, parmesan. Add: chicken $7, steak $10, shrimp $8</div>
+            <div class="food-item-price">$22</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Truffle &amp; Cheese Pasta</div>
+            <div class="food-item-desc">Cavatappi, creamy five cheese blend, truffle oil, roasted panko</div>
+            <div class="food-item-price">$20</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Steak &amp; Brussels Salad</div>
+            <div class="food-item-desc">Filet tips, romaine, blue cheese, avocado, bacon, cherry tomatoes, herb-buttermilk dressing</div>
+            <div class="food-item-price">$25</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sandwiches" class="food-panel">
+        <div class="food-items">
+          <div class="food-item">
+            <div class="food-item-name">Cheddar Burger</div>
+            <div class="food-item-desc">Cheddar, tomato, lettuce, pickles, house sauce, brioche bun. Add: bacon $1, egg $1, avocado $1</div>
+            <div class="food-item-price">$18</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Spicy Avocado Burger</div>
+            <div class="food-item-desc">Pepper jack, chipotle aioli, lettuce, jalapeños, sliced avocado</div>
+            <div class="food-item-price">$19</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Arlington Hot Chicken</div>
+            <div class="food-item-desc">Lightly breaded &amp; fried, hot sauce, garlic aioli, pickles, brioche bun</div>
+            <div class="food-item-price">$19</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Grilled Chicken</div>
+            <div class="food-item-desc">Swiss cheese, applewood bacon, honey dijon mayo, lettuce, tomato, brioche bun</div>
+            <div class="food-item-price">$18</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Roasted Turkey Wrap</div>
+            <div class="food-item-desc">Sliced turkey, swiss, arugula, red onion, sliced tomato, basil aioli</div>
+            <div class="food-item-price">$17</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Buffalo Chicken Wrap</div>
+            <div class="food-item-desc">Fried chicken, buffalo sauce, lettuce, blue cheese</div>
+            <div class="food-item-price">$17</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="desserts" class="food-panel">
+        <div class="food-items">
+          <div class="food-item">
+            <div class="food-item-name">Salted Caramel Cheesecake</div>
+            <div class="food-item-desc">NY style cheesecake, caramel drizzle, salt flakes</div>
+            <div class="food-item-price">$8</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Carrot Cake</div>
+            <div class="food-item-desc">Roasted carrot, moist spiced cake, cream cheese icing</div>
+            <div class="food-item-price">$8</div>
+          </div>
+          <div class="food-item">
+            <div class="food-item-name">Flourless Chocolate Cake</div>
+            <div class="food-item-desc">Gluten free chocolate cake, rich ganache, whipped cream</div>
+            <div class="food-item-price">$8</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WINGS -->
+  <section id="wings">
+    <div class="section-inner">
+      <div class="wings-inner">
+        <div class="wings-left reveal">
+          <p class="section-label">A Brass Rabbit Classic</p>
+          <h2 class="section-title">Crispy <em>Wings</em></h2>
+          <div class="divider"><div class="divider-line"></div><div class="divider-dot"></div></div>
+          <div class="wings-options">
+            <div class="wings-category">
+              <div class="wings-cat-label">Dry Rubs</div>
+              <div class="wings-tags">
+                <span class="tag">Old Bay</span>
+                <span class="tag">Lemon Pepper</span>
+                <span class="tag">BBQ</span>
+              </div>
+            </div>
+            <div class="wings-category">
+              <div class="wings-cat-label">Sauces</div>
+              <div class="wings-tags">
+                <span class="tag">Hot</span>
+                <span class="tag">Mild</span>
+                <span class="tag">Mumbo</span>
+                <span class="tag">Honey Sriracha</span>
+                <span class="tag">Secret Sauce</span>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--brass); margin-top:2rem;">🐇 Monday Wing Night · 6–9pm</p>
+        </div>
+        <div class="wings-right reveal reveal-delay-2">
+          <div class="wings-sizes">
+            <div class="wings-size">
+              <div class="ws-name">Traditional</div>
+              <div class="ws-detail">Flats &amp; Drums</div>
+              <div class="ws-price">$16</div>
+            </div>
+            <div class="wings-size">
+              <div class="ws-name">Boneless</div>
+              <div class="ws-detail">Chicken Wings</div>
+              <div class="ws-price">$14</div>
+            </div>
+          </div>
+          <div style="margin-top:3rem; border: 1px solid rgba(201,150,63,0.15); padding:2rem;">
+            <div class="wings-cat-label" style="margin-bottom:1rem;">The Girl Dinner</div>
+            <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; color:var(--text-dim); line-height:1.7;">Romaine/arugula caesar salad &amp; crispy frites — served in a large martini glass.</p>
+            <p style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--brass); margin-top:1rem;">$14</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-label">What's On</p>
+        <h2 class="section-title">Weekly <em>Events</em></h2>
+      </div>
+      <div class="events-grid reveal reveal-delay-1">
+        <div class="event-card">
+          <div class="event-day">Every Monday · 6–9pm</div>
+          <div class="event-name">Wing Night</div>
+          <div class="event-desc">The best wings in Arlington, every Monday evening. Pick your rub or sauce and settle in for the week's best tradition.</div>
+          <a href="#wings" class="event-link">See Wing Options →</a>
+        </div>
+        <div class="event-card">
+          <div class="event-day">Mon–Fri · 3–6pm</div>
+          <div class="event-name">Happy Hour</div>
+          <div class="event-desc">$5 drafts, $6 wine, $8 espresso martinis, $10 whiskeys &amp; apps. The city's best after-work unwind, five days a week.</div>
+          <a href="#happyhour" class="event-link">See Full Specials →</a>
+        </div>
+        <div class="event-card">
+          <div class="event-day">Sat &amp; Sun · From 10am</div>
+          <div class="event-name">Weekend Brunch</div>
+          <div class="event-desc">Brunch food, brunch drinks, and that Brass Rabbit energy. The way weekends were meant to begin.</div>
+          <a href="https://www.thebrassrabbitpub.com/_files/ugd/126966_797151665a984bc0ae86191ec63eb31f.pdf" target="_blank" class="event-link">Brunch Menu →</a>
+        </div>
+        <div class="event-card">
+          <div class="event-day">Upcoming · See our page</div>
+          <div class="event-name">Live Events</div>
+          <div class="event-desc">From live music to themed nights and special pop-ups — something is always happening at the Rabbit. Check our events page.</div>
+          <a href="https://www.thebrassrabbitpub.com/upcoming-events" target="_blank" class="event-link">Upcoming Events →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVATE EVENTS -->
+  <section id="private">
+    <div class="private-inner">
+      <div class="reveal">
+        <p class="section-label">Celebrate With Us</p>
+        <h2 class="section-title">Private <em>Parties &amp;<br>Events</em></h2>
+        <p>Birthdays, corporate happy hours, private buyouts — the Brass Rabbit is the perfect backdrop for your next event. First come, first served for walk-ins; large parties by arrangement.</p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <a href="https://www.thebrassrabbitpub.com/bookanevent" target="_blank" class="btn-primary">Book an Event</a>
+          <a href="mailto:connect@brassrabbitpub.com" class="btn-outline">Email Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / FOOTER -->
+  <footer id="contact">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-brand reveal">
+          <div class="brand-name">Brass Rabbit</div>
+          <div class="brand-sub">Pub &amp; Kitchen · Clarendon</div>
+          <p>Arlington's go-to for great food, serious whiskey, weekend brunch, and the kind of happy hour you actually look forward to.</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/brassrabbitpub/" target="_blank" class="social-link" aria-label="Facebook">f</a>
+            <a href="https://www.instagram.com/brassrabbitpub/" target="_blank" class="social-link" aria-label="Instagram">ig</a>
+          </div>
+        </div>
+        <div class="contact-col reveal reveal-delay-1">
+          <div class="contact-col-label">Quick Links</div>
+          <a href="#menus">Menus</a>
+          <a href="https://www.opentable.com/r/brass-rabbit-reservations-arlington?restref=1478311&lang=en-US&ot_source=Restaurant%20website" target="_blank">Reservations</a>
+          <a href="https://order.toasttab.com/online/brass-rabbit-public-house" target="_blank">Order Online</a>
+          <a href="https://www.thebrassrabbitpub.com/upcoming-events" target="_blank">Upcoming Events</a>
+          <a href="https://www.thebrassrabbitpub.com/bookanevent" target="_blank">Private Events</a>
+          <a href="https://www.thebrassrabbitpub.com/giftcards" target="_blank">Gift Cards</a>
+          <a href="https://www.thebrassrabbitpub.com/newsletter" target="_blank">Newsletter</a>
+        </div>
+        <div class="contact-col reveal reveal-delay-2">
+          <div class="contact-col-label">Find Us</div>
+          <a href="https://www.google.com/maps/place/Brass+Rabbit/@38.8869075,-77.0941034,15z" target="_blank">1210 N Garfield St<br>Arlington, VA 22201</a>
+          <a href="tel:7037469977">703-746-9977</a>
+          <a href="mailto:connect@brassrabbitpub.com">connect@brassrabbitpub.com</a>
+          <p style="margin-top:1.5rem; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--brass-dim);">Near Clarendon Metro · Orange &amp; Silver Lines</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Brass Rabbit Pub · Arlington, Virginia</p>
+        <p><a href="mailto:connect@brassrabbitpub.com">connect@brassrabbitpub.com</a></p>
+        <p>Consuming raw or undercooked foods may increase risk of foodborne illness.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX - 16) * 0.12;
+      ringY += (mouseY - ringY - 16) * 0.12;
+      cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursorRing.style.width = '50px';
+        cursorRing.style.height = '50px';
+        cursorRing.style.opacity = '0.9';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorRing.style.width = '32px';
+        cursorRing.style.height = '32px';
+        cursorRing.style.opacity = '0.6';
+      });
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // Food tabs
+    function showTab(name) {
+      document.querySelectorAll('.food-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.food-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(name).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
