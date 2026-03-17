@@ -465,7 +465,7 @@
       <div class="hero-logo-wrap">
         <img
           class="hero-logo-img"
-          src="brassrabbitlogo.avif"
+          src="https://static.wixstatic.com/media/126966_615326bc0b2c431c93feed166f54957a~mv2.png"
           alt="Brass Rabbit Pub"
           width="130" height="130"
         />
@@ -822,12 +822,16 @@
     }
 
     /* ── FOOD TABS ── */
-   function showTab(name) {
-      document.querySelectorAll('.food-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.food-tab').forEach(t => t.classList.remove('active'));
-      document.getElementById(name).classList.add('active');
-      event.target.classList.add('active');
-    }
+    document.querySelectorAll('.tab').forEach(function(tab){
+      tab.addEventListener('click',function(){
+        document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('on'); t.setAttribute('aria-selected','false'); });
+        document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+        tab.classList.add('on'); tab.setAttribute('aria-selected','true');
+        document.getElementById(tab.getAttribute('aria-controls')).classList.add('on');
+      });
+    });
+
+  }());
   </script>
 </body>
 </html>
