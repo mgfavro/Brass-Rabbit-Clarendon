@@ -80,14 +80,13 @@
   }
   .nav-logo-img{
     width:36px;height:36px;
-    /* black PNG → white via invert, then sepia+hue for a warm brass tint */
-    filter:brightness(0) invert(1) sepia(.25) saturate(1.4) hue-rotate(5deg);
     flex-shrink:0;
-    transition:filter .3s ease,opacity .3s ease;
+    transition:opacity .3s ease,transform .3s ease;
     opacity:.92;
+    border-radius:50%;
   }
   #nav.stuck .nav-logo-img{opacity:1}
-  .nav-logo:hover .nav-logo-img{opacity:1;filter:brightness(0) invert(1) sepia(.6) saturate(2.5) hue-rotate(5deg);}
+  .nav-logo:hover .nav-logo-img{opacity:1;transform:scale(1.05);}
   .nav-logo-text{
     font-family:'Cormorant Garamond',serif;font-weight:400;
     font-size:.95rem;letter-spacing:.28em;text-transform:uppercase;
@@ -186,15 +185,10 @@
   .hero-logo-img{
     width:clamp(80px,14vw,130px);
     height:auto;
-    /* invert black → white then warm it slightly toward brass */
-    filter:brightness(0) invert(1) sepia(.3) saturate(1.6) hue-rotate(5deg);
-    /* subtle gold ring glow */
-    filter:drop-shadow(0 0 18px rgba(201,150,63,.25)) brightness(0) invert(1);
-    opacity:.95;
+    opacity:1;
   }
-  /* Override so the two filters stack properly via a class */
   .hero-logo-img{
-    filter:brightness(0) invert(1) drop-shadow(0 0 20px rgba(201,150,63,.22));
+    filter:drop-shadow(0 0 22px rgba(201,150,63,.35));
   }
 
   /* thin brass ornament line under logo */
